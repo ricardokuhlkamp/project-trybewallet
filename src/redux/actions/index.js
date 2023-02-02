@@ -12,6 +12,8 @@ export const SEARCH_BEGIN = 'SEARCH_BEGIN';
 export const SEARCH_CURRENCIES = 'SEARCH_CURRENCIES';
 export const SEARCH_ERROR = 'SEARCH_ERROR';
 
+export const EXPENSES_OBJECT_LIST = 'EXPENSES_OBJECT_LIST';
+
 export const searchBegin = () => ({
   type: SEARCH_BEGIN,
 });
@@ -26,16 +28,27 @@ export const searchError = (error) => ({
   error,
 });
 
-export function apiCambio() {
+export const expensesObjectList = (payload) => ({
+  type: EXPENSES_OBJECT_LIST,
+  payload,
+});
+
+export function apiCambio(formData) {
   return async (dispatch) => {
     try {
       dispatch(searchBegin());
       const API_COTACAO = 'https://economia.awesomeapi.com.br/json/all';
       const response = await fetch(API_COTACAO);
-      const data = await response.json();
-      const dataCoins = { ...data };
-      delete dataCoins.USDT;
-      dispatch(searchCurrencies(Object.keys(dataCoins)));
+      const exchangeRates = await response.json();
+      delete exchangeRates.USDT;
+      if (formData) {
+        const data = {
+          ...formData, exchangeRates,
+        };
+        dispatch(expensesObjectList(data));
+      }
+      // const coins = { ...exchangeRates };
+      dispatch(searchCurrencies(Object.keys(exchangeRates)));
     } catch (error) {
       // console.log(error.message);
       dispatch(searchError(error));
