@@ -14,6 +14,8 @@ export const SEARCH_ERROR = 'SEARCH_ERROR';
 
 export const EXPENSES_OBJECT_LIST = 'EXPENSES_OBJECT_LIST';
 
+export const EXPENSES_DELETE_ROW = 'EXPENSES_DELETE_ROW';
+
 export const searchBegin = () => ({
   type: SEARCH_BEGIN,
 });
@@ -55,3 +57,8 @@ export function apiCambio(formData) {
     }
   };
 }
+
+export const expensesDeleteRow = (payload) => ({
+  type: EXPENSES_DELETE_ROW,
+  payload,
+});
