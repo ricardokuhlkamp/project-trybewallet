@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { expensesDeleteRow } from '../redux/actions';
+import { expensesUpdateRow, idExpenseEdit, expenseEdit } from '../redux/actions';
 
 class Table extends Component {
   handleClick = (id) => {
     const { dispatch, expenses } = this.props;
     const filterExpenses = expenses.filter((e) => Number(e.id) !== Number(id));
-    dispatch(expensesDeleteRow(filterExpenses));
+    dispatch(expensesUpdateRow(filterExpenses));
+  };
+
+  handleClickEdit = (idBtn) => {
+    const { dispatch } = this.props;
+    dispatch(idExpenseEdit(Number(idBtn)));
+    dispatch(expenseEdit(true));
   };
 
   render() {
@@ -30,12 +36,11 @@ class Table extends Component {
           </thead>
           <tbody>
             { expenses.map((e) => (
-              <tr key={ e.id }>
+              <tr key={ `${e.id}${e.value}` }>
                 <td>{ e.description }</td>
                 <td>{ e.tag }</td>
                 <td>{ e.method }</td>
                 <td>{ Number(e.value).toFixed(2) }</td>
-                {/* <td>{ e.currency }</td> */}
                 <td>{ e.exchangeRates[e.currency].name }</td>
                 <td>{ Number(e.exchangeRates[e.currency].ask).toFixed(2) }</td>
                 <td>{ Number(e.exchangeRates[e.currency].ask * e.value).toFixed(2) }</td>
@@ -43,13 +48,15 @@ class Table extends Component {
                 <td>
                   <button
                     type="button"
+                    data-testid="edit-btn"
+                    onClick={ () => this.handleClickEdit(e.id) }
                   >
                     Editar
                   </button>
                   <button
                     data-testid="delete-btn"
                     type="button"
-                    onClick={ () => this.handleClick(e.id) }
+                    onClick={ () => this.handleClick(Number(e.id)) }
                   >
                     Excluir
                   </button>
@@ -65,6 +72,7 @@ class Table extends Component {
 
 const mapStateToProps = ({ wallet }) => ({
   expenses: wallet.expenses,
+  editor: wallet.editor,
 });
 
 Table.propTypes = {

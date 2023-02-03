@@ -4,7 +4,10 @@ import {
   SEARCH_BEGIN,
   SEARCH_CURRENCIES,
   EXPENSES_OBJECT_LIST,
-  EXPENSES_DELETE_ROW,
+  EXPENSES_UPDATE_ROW,
+  ID_EXPENSE_EDIT,
+  EXPENSE_EDIT,
+  EXPENSE_SAVE_UPDATE,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -28,10 +31,29 @@ const wallet = (state = INITIAL_STATE, action) => {
     return {
       ...state, expenses: [...state.expenses, action.payload],
     };
-  case EXPENSES_DELETE_ROW:
-    console.log(action.payload);
+  case EXPENSES_UPDATE_ROW:
     return {
       ...state, expenses: action.payload,
+    };
+  case ID_EXPENSE_EDIT:
+    return {
+      ...state, idToEdit: action.payload,
+    };
+  case EXPENSE_EDIT:
+    return {
+      ...state, editor: action.payload,
+    };
+  case EXPENSE_SAVE_UPDATE:
+    return {
+      ...state,
+      expenses: state.expenses.map((e) => {
+        if (e.id === action.payload.id) {
+          return {
+            ...e, ...action.payload,
+          };
+        }
+        return e;
+      }),
     };
   default:
     return state;

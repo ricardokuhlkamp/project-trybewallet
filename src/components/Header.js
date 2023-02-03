@@ -10,7 +10,6 @@ class Header extends React.Component {
   render() {
     const { cambio } = this.state;
     const { email, expenses } = this.props;
-    console.log(expenses);
     return (
       <div>
         <h1>TrybeWallet</h1>

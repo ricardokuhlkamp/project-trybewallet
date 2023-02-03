@@ -14,7 +14,11 @@ export const SEARCH_ERROR = 'SEARCH_ERROR';
 
 export const EXPENSES_OBJECT_LIST = 'EXPENSES_OBJECT_LIST';
 
-export const EXPENSES_DELETE_ROW = 'EXPENSES_DELETE_ROW';
+export const EXPENSES_UPDATE_ROW = 'EXPENSES_UPDATE_ROW';
+
+export const ID_EXPENSE_EDIT = 'ID_EXPENSE_EDIT';
+export const EXPENSE_EDIT = 'EXPENSE_EDIT';
+export const EXPENSE_SAVE_UPDATE = 'EXPENSE_SAVE_UPDATE';
 
 export const searchBegin = () => ({
   type: SEARCH_BEGIN,
@@ -35,7 +39,12 @@ export const expensesObjectList = (payload) => ({
   payload,
 });
 
-export function apiCambio(formData) {
+export const expenseSaveUpdate = (payload) => ({
+  type: EXPENSE_SAVE_UPDATE,
+  payload,
+});
+
+export function apiCambio(formData, formDataEdit) {
   return async (dispatch) => {
     try {
       dispatch(searchBegin());
@@ -49,6 +58,12 @@ export function apiCambio(formData) {
         };
         dispatch(expensesObjectList(data));
       }
+      if (formDataEdit) {
+        const dataEdit = {
+          ...formDataEdit, exchangeRates,
+        };
+        dispatch(expenseSaveUpdate(dataEdit));
+      }
       // const coins = { ...exchangeRates };
       dispatch(searchCurrencies(Object.keys(exchangeRates)));
     } catch (error) {
@@ -58,7 +73,17 @@ export function apiCambio(formData) {
   };
 }
 
-export const expensesDeleteRow = (payload) => ({
-  type: EXPENSES_DELETE_ROW,
+export const expensesUpdateRow = (payload) => ({
+  type: EXPENSES_UPDATE_ROW,
+  payload,
+});
+
+export const idExpenseEdit = (payload) => ({
+  type: ID_EXPENSE_EDIT,
+  payload,
+});
+
+export const expenseEdit = (payload) => ({
+  type: EXPENSE_EDIT,
   payload,
 });

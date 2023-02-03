@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { apiCambio } from '../redux/actions';
+import { apiCambio, expenseEdit } from '../redux/actions';
 import Table from './Table';
 
 class WalletForm extends Component {
@@ -17,17 +17,23 @@ class WalletForm extends Component {
   };
 
   componentDidMount() {
-    // this.apiCotacao();
-    // preciso fazer um dispatch para chamar a api
-    // dentro dessa chamada eu preciso ter um segundo dispatc, no qual eu irei mandar para o reducer as moedas salvas
     const { dispatch } = this.props;
     dispatch(apiCambio());
   }
 
+  componentDidUpdate() {
+    const { id } = this.state;
+    const { editor, idToEdit, expenses } = this.props;
+    const formDataRequest = expenses.filter((e) => (
+      e.id === idToEdit
+    ))[0];
+    if (editor && id !== formDataRequest.id) {
+      this.setState({ ...formDataRequest });
+    }
+  }
+
   handleChange = ({ target: { name, value } }) => {
-    this.setState({
-      [name]: value,
-    });
+    this.setState({ [name]: value });
   };
 
   handleChangeTag = (event) => {
@@ -61,15 +67,45 @@ class WalletForm extends Component {
       description,
     };
     const { dispatch } = this.props;
-    dispatch(apiCambio(expenses));
-    this.setState((prevState) => ({
-      id: prevState.id + 1,
+    dispatch(apiCambio(expenses, null));
+    this.setState(() => ({
+      id: id + 1,
       value: '',
       currency: 'USD',
       method: 'Dinheiro',
       tag: 'Lazer',
       description: '',
     }));
+  };
+
+  handleClickUpdate = () => {
+    const { dispatch } = this.props;
+    const {
+      value,
+      currency,
+      method,
+      tag,
+      description,
+    } = this.state;
+    const { idToEdit } = this.props;
+    const updateExpense = {
+      id: idToEdit,
+      value,
+      currency,
+      method,
+      tag,
+      description,
+    };
+    console.log('updateExpense', updateExpense);
+    dispatch(apiCambio(null, updateExpense));
+    dispatch(expenseEdit(false));
+    this.setState({
+      value: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Lazer',
+      description: '',
+    });
   };
 
   render() {
@@ -82,7 +118,8 @@ class WalletForm extends Component {
       value,
       description,
     } = this.state;
-    const { currencies } = this.props;
+    const { currencies, editor } = this.props;
+
     return (
       <div>
         <form>
@@ -166,12 +203,21 @@ class WalletForm extends Component {
                 ))}
               </select>
             </label>
-            <button
-              type="button"
-              onClick={ this.handleClick }
-            >
-              Adicionar despesa
-            </button>
+            { !editor ? (
+              <button
+                type="button"
+                onClick={ this.handleClick }
+              >
+                Adicionar despesa
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={ this.handleClickUpdate }
+              >
+                Editar despesa
+              </button>
+            )}
           </div>
         </form>
         <Table />
@@ -183,10 +229,16 @@ class WalletForm extends Component {
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  idToEdit: PropTypes.number.isRequired,
+  editor: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
+  expenses: state.wallet.expenses,
+  editor: state.wallet.editor,
+  idToEdit: state.wallet.idToEdit,
 });
 
 export default connect(mapStateToProps)(WalletForm);
