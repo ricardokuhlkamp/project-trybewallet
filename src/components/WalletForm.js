@@ -147,6 +147,7 @@ class WalletForm extends Component {
               />
             </label>
             <label htmlFor="currencies">
+              Moeda
               <select
                 id="currencies"
                 name="currencies"
@@ -166,6 +167,7 @@ class WalletForm extends Component {
               </select>
             </label>
             <label htmlFor="method">
+              Método de pagamento
               <select
                 id="method"
                 name="method"
@@ -185,6 +187,7 @@ class WalletForm extends Component {
               </select>
             </label>
             <label htmlFor="tag">
+              Categoria
               <select
                 id="tag"
                 name="tag"

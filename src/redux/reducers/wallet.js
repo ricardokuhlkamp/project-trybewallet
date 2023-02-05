@@ -1,7 +1,7 @@
 // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
 
 import {
-  SEARCH_BEGIN,
+  // SEARCH_BEGIN,
   SEARCH_CURRENCIES,
   EXPENSES_OBJECT_LIST,
   EXPENSES_UPDATE_ROW,
@@ -19,10 +19,10 @@ const INITIAL_STATE = {
 
 const wallet = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case SEARCH_BEGIN:
-    return {
-      ...state,
-    };
+  // case SEARCH_BEGIN:
+  //   return {
+  //     ...state,
+  //   };
   case SEARCH_CURRENCIES:
     return {
       ...state, currencies: action.payload,

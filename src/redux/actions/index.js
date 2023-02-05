@@ -8,7 +8,7 @@ export const validEmail = (payload) => ({
 
 // wallet
 
-export const SEARCH_BEGIN = 'SEARCH_BEGIN';
+// export const SEARCH_BEGIN = 'SEARCH_BEGIN';
 export const SEARCH_CURRENCIES = 'SEARCH_CURRENCIES';
 export const SEARCH_ERROR = 'SEARCH_ERROR';
 
@@ -20,9 +20,9 @@ export const ID_EXPENSE_EDIT = 'ID_EXPENSE_EDIT';
 export const EXPENSE_EDIT = 'EXPENSE_EDIT';
 export const EXPENSE_SAVE_UPDATE = 'EXPENSE_SAVE_UPDATE';
 
-export const searchBegin = () => ({
-  type: SEARCH_BEGIN,
-});
+// export const searchBegin = () => ({
+//   type: SEARCH_BEGIN,
+// });
 
 export const searchCurrencies = (payload) => ({
   type: SEARCH_CURRENCIES,
@@ -47,7 +47,7 @@ export const expenseSaveUpdate = (payload) => ({
 export function apiCambio(formData, formDataEdit) {
   return async (dispatch) => {
     try {
-      dispatch(searchBegin());
+      // dispatch(searchBegin());
       const API_COTACAO = 'https://economia.awesomeapi.com.br/json/all';
       const response = await fetch(API_COTACAO);
       const exchangeRates = await response.json();
