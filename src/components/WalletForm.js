@@ -96,7 +96,6 @@ class WalletForm extends Component {
       tag,
       description,
     };
-    console.log('updateExpense', updateExpense);
     dispatch(apiCambio(null, updateExpense));
     dispatch(expenseEdit(false));
     this.setState({

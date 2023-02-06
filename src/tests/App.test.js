@@ -395,30 +395,76 @@ describe('Verifica as actions parte 04', () => {
     // expect(spySearchCurrencies).toHaveBeenCalledTimes(1);
   });
 });
+// aqui ---------------------------------------------
+describe('teste case EXPENSE_SAVE_UPDATE', () => {
+  test.skip('Verifica EXPENSE_SAVE_UPDATE', async () => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementation(async () => ({
+        json: async () => mockData,
+      }));
+    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState4 });
+    const state = store.getState();
+    const { idToEdit } = state.wallet;
+    const mockApiCambio = jest.spyOn(actions, 'apiCambio');
+    const mockExpenseSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
+    await waitFor(() => {
+      store.dispatch(mockApiCambio(null, { id: idToEdit, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }));
+      store.dispatch(mockExpenseSaveUpdate({ type: 'EXPENSE_SAVE_UPDATE', payload: [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }] }));
+    });
+    const { expenses } = state.wallet;
+    expect(expenses).toEqual([{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }]);
+  });
+});
 
-// describe.skip('actions', () => {
-//   teste.skip('teste a action com erro', async () => {
-//     const initialState = {
-//       user: {
-//         email: emailteste,
-//       },
-//       wallet: {
-//         currencies: [],
-//         expenses: [],
-//         editor: false,
-//         idToEdit: 0,
-//       },
-//     };
-//     const store = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-//     console.log(store);
-//     const expectedActions = [
-//       { type: actions.SEARCH_ERROR, error: new Error('API error') },
-//     ];
+describe('Verifica as funções ligadas aos botões editar e excluir', () => {
+  jest.spyOn(global, 'fetch')
+    .mockImplementation(async () => ({
+      json: async () => mockData,
+    }));
+  const initialState2 = {
+    user: {
+      email: emailteste,
+    },
+    wallet: {
+      currencies: currenciesList,
+      expenses: [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }],
+      editor: true,
+      idToEdit: 0,
+    },
+  };
+  const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState2 });
+  test.skip('Verifica o botão de editar e a respectiva função', async () => {
+    const inputValue = screen.getByTestId('value-input');
+    fireEvent.change(inputValue, { target: { value: '30' } });
+    expect(inputValue.value).toBe('30');
+    const btnAddExpense = screen.getByRole('button', { name: 'Editar despesa' });
+    expect(btnAddExpense).toBeInTheDocument();
+    userEvent.click(btnAddExpense);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    await waitFor(async () => {
+      const state = store.getState();
+      console.log(state.wallet);
+      expect(screen.getByRole('cell', { name: /30\.00/i })).toBeInTheDocument();
+    });
+  });
 
-//     global.fetch = jest.fn().mockRejectedValue(new Error('API error'));
-
-//     await store.store.dispatch(actions.apiCambio());
-
-//     expect(store.getActions()).toEqual(expectedActions);
-//   });
-// });
+  test('Verifica o botão de deletar e a respectiva função', async () => {
+    const btnDelete = screen.getByRole('button', { name: /excluir/i });
+    expect(btnDelete).toBeInTheDocument();
+    const descriptionCell = screen.getByRole('cell', {
+      name: /comida/i,
+    });
+    expect(descriptionCell).toBeInTheDocument();
+    await waitFor(() => {
+      userEvent.click(btnDelete);
+      expect(btnDelete).not.toBeInTheDocument();
+      // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
+    });
+    // screen.logTestingPlaygroundURL();
+    expect(descriptionCell).not.toBeInTheDocument();
+    // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
+    console.log(store.getState());
+    const state = store.getState();
+    expect(state.wallet.expenses).toEqual([]);
+  });
+});
