@@ -40,7 +40,6 @@ describe('teste da rota "/carteira"', () => {
   };
   test('testando a renderização do elementos do formulário', () => {
     const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
-    // console.log(store.getState())
     const { pathname } = history.location;
     expect(pathname).toBe('/carteira');
 
@@ -140,10 +139,8 @@ describe('', () => {
     await waitFor(() => userEvent.selectOptions(selectTag, 'Transporte'));
     // userEvent.selectOptions(selectMethod, 'Cartão de crédito' );
     // userEvent.selectOptions(selectTag, 'Transporte');
-    console.log('store', store.getState());
     userEvent.click(btnAddExpense);
     await waitFor(() => {
-      console.log('store', store.getState().wallet.expenses);
       const state = store.getState();
 
       expect(state.wallet.expenses[0].value).toBe('10');
@@ -200,8 +197,8 @@ describe('', () => {
     const btnEditExpense = screen.getByRole('button', {
       name: 'Editar despesa',
     });
+    userEvent.click(btnEditExpense);
     await waitFor(() => {
-      userEvent.click(btnEditExpense);
       expect(screen.getByRole('cell', { name: /20\.00/i })).toBeInTheDocument();
       // expect(screen.getByRole('cell', { name: /lazer/i })).toBeInTheDocument(); ERRO ao adicionar mais um expect
     });
@@ -243,7 +240,6 @@ describe('', () => {
     // screen.logTestingPlaygroundURL();
     expect(descriptionCell).not.toBeInTheDocument();
     // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
-    console.log(store.getState());
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });

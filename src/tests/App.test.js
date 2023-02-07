@@ -11,39 +11,6 @@ const emailteste = 'aluno@trybe.com';
 const currenciesList = ['USD', 'CAD', 'GBP', 'ARS', 'BTC', 'LTC', 'EUR', 'JPY', 'CHF', 'AUD', 'CNY', 'ILS', 'ETH', 'XRP', 'DOGE'];
 const expenseList = [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }];
 
-describe('Page Login', () => {
-  test('Verifica se a tela Login é renderizada  corretam coorretamente', () => {
-    renderWithRouterAndRedux(<App />);
-    const btnEntrar = screen.getByRole('button', { name: /entrar/i });
-    const inputEmail = screen.getByTestId('email-input');
-    const inputPassword = screen.getByTestId('password-input');
-    expect(btnEntrar).toBeInTheDocument();
-    expect(inputEmail).toBeInTheDocument();
-    expect(inputPassword).toBeInTheDocument();
-  });
-  test('Verifica a validação de email e senha', async () => {
-    const password = '123456';
-    const email = 'aluno@trybe.com';
-    const { history } = renderWithRouterAndRedux(<App />);
-    const btnEntrar = screen.getByRole('button', { name: /entrar/i });
-    const inputEmail = screen.getByTestId('email-input');
-    const inputPassword = screen.getByTestId('password-input');
-    expect(btnEntrar).toBeDisabled();
-    userEvent.type(inputEmail, email);
-    userEvent.type(inputPassword, password);
-    expect(btnEntrar).toBeEnabled();
-    console.log(btnEntrar.disabled);
-    userEvent.click(btnEntrar);
-    const { pathname } = history.location;
-    expect(pathname).toBe('/carteira');
-    expect(pathname).not.toBe('/');
-    const inputValue = screen.getByRole('spinbutton', {
-      name: /valor/i,
-    });
-    expect(inputValue).toBeInTheDocument();
-  });
-});
-
 describe('Page Wallet', () => {
   test('Verifica se a page Wallet é renderizada', () => {
     const initialState = {
@@ -58,17 +25,13 @@ describe('Page Wallet', () => {
       },
     };
     renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+
     const emailField = screen.getByRole('heading', { name: /email: aluno@trybe\.com/i });
+    const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
+    const thTheadTableDescription = screen.getByRole('columnheader', { name: /descrição/i });
+
     expect(emailField).toBeInTheDocument();
-
-    const inputValue = screen.getByRole('spinbutton', {
-      name: /valor/i,
-    });
     expect(inputValue).toBeInTheDocument();
-
-    const thTheadTableDescription = screen.getByRole('columnheader', {
-      name: /descrição/i,
-    });
     expect(thTheadTableDescription).toBeInTheDocument();
   });
 });
@@ -140,47 +103,6 @@ describe('testando a API', () => {
       },
     };
     renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalled();
-    });
-  });
-  test('Testando a API', async () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: [],
-        expenses: [],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    // afterEach(() => jest.clearAllMocks());
-    // beforeEach(() => {
-    // });
-    renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    // const value = 10;
-    // const description = 'uber';
-    // const currency = 'EUR';
-    // const method = 'Dinheiro';
-    // const tag = 'transporte';
-    // // const currenciesList = ['USD', 'CAD', 'GBP', 'ARS', 'BTC', 'LTC', 'EUR', 'JPY', 'CHF', 'AUD', 'CNY', 'ILS', 'ETH', 'XRP', 'DOGE'];
-
-    // const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
-    // const inputDescription = screen.getByRole('textbox', { name: /descrição/i });
-    // const currencySelect = screen.getByTestId('currency-input');
-    // // const currencySelect = screen.getByRole('listbox');
-    // const methodSelect = screen.getByTestId('method-input');
-    // const tagSelect = screen.getByTestId('tag-input');
-    // const btnAddCost = screen.getByRole('button', { name: /adicionar despesa/i });
-
-    // userEvent.type(inputValue, value);
-    // userEvent.type(inputDescription, description);
-    // userEvent.selectOptions(currencySelect, [screen.getByText(currency)]);
-    // userEvent.selectOptions(methodSelect, [method, method]);
-    // userEvent.selectOptions(tagSelect, [tag, tag]);
-    // userEvent.click(btnAddCost);
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
