@@ -61,7 +61,7 @@ describe('teste da rota "/carteira"', () => {
     expect(columnHeaderExchange).toBeInTheDocument();
     expect(columnheaderCoin).toBeInTheDocument();
     expect(columnHeaderEditAndDelete).toBeInTheDocument();
-  });  
+  });
 });
 
 describe('', () => {
@@ -163,7 +163,6 @@ describe('', () => {
   });
 
   test('Verifica a edição dos itens na tabela', async () => {
-    
     const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
 
     const { pathname } = history.location;
@@ -219,7 +218,7 @@ describe('', () => {
     //   expect(inputValueField.value).toBe('10');
     // });
   });
-  test('Verifica a eliminação dos itens na tabela', async () => {    
+  test('Verifica a eliminação dos itens na tabela', async () => {
     const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
 
     expect(screen.getByRole('cell', { name: /uber/i })).toBeInTheDocument();
@@ -248,4 +247,4 @@ describe('', () => {
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });
-})
+});
