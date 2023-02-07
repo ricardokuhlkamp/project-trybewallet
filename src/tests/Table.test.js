@@ -10,35 +10,34 @@ import mockData from './helpers/mockData';
 
 const emailTeste = 'tryber@trybe.com';
 
-const INITIAL_STATE = {
-  user: {
-    email: emailTeste,
-  },
-  wallet: {
-    currencies: [
-      'USD',
-      'CAD',
-      'GBP',
-      'ARS',
-      'BTC',
-      'LTC',
-      'EUR',
-      'JPY',
-      'CHF',
-      'AUD',
-      'CNY',
-      'ILS',
-      'ETH',
-      'XRP',
-      'DOGE',
-    ],
-    expenses: [],
-    editor: false,
-    idToEdit: 0,
-  },
-};
-
 describe('teste da rota "/carteira"', () => {
+  const INITIAL_STATE = {
+    user: {
+      email: emailTeste,
+    },
+    wallet: {
+      currencies: [
+        'USD',
+        'CAD',
+        'GBP',
+        'ARS',
+        'BTC',
+        'LTC',
+        'EUR',
+        'JPY',
+        'CHF',
+        'AUD',
+        'CNY',
+        'ILS',
+        'ETH',
+        'XRP',
+        'DOGE',
+      ],
+      expenses: [],
+      editor: false,
+      idToEdit: 0,
+    },
+  };
   test('testando a renderização do elementos do formulário', () => {
     const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
     // console.log(store.getState())
@@ -62,8 +61,47 @@ describe('teste da rota "/carteira"', () => {
     expect(columnHeaderExchange).toBeInTheDocument();
     expect(columnheaderCoin).toBeInTheDocument();
     expect(columnHeaderEditAndDelete).toBeInTheDocument();
-  });
+  });  
+});
 
+describe('', () => {
+  const INITIAL_STATE = {
+    user: {
+      email: emailTeste,
+    },
+    wallet: {
+      currencies: [
+        'USD',
+        'CAD',
+        'GBP',
+        'ARS',
+        'BTC',
+        'LTC',
+        'EUR',
+        'JPY',
+        'CHF',
+        'AUD',
+        'CNY',
+        'ILS',
+        'ETH',
+        'XRP',
+        'DOGE',
+      ],
+      expenses: [
+        {
+          id: 0,
+          value: '10',
+          currency: 'CAD',
+          method: 'Cartão de crédito',
+          tag: 'Transporte',
+          description: 'uber',
+          exchangeRates: mockData,
+        },
+      ],
+      editor: false,
+      idToEdit: 0,
+    },
+  };
   test('Verificação da inserção de despesas na tabela', async () => {
     // jest.spyOn(global, 'fetch')
     //   .mockImplementation(async () => ({
@@ -125,44 +163,8 @@ describe('teste da rota "/carteira"', () => {
   });
 
   test('Verifica a edição dos itens na tabela', async () => {
-    const INITIAL_STATE2 = {
-      user: {
-        email: emailTeste,
-      },
-      wallet: {
-        currencies: [
-          'USD',
-          'CAD',
-          'GBP',
-          'ARS',
-          'BTC',
-          'LTC',
-          'EUR',
-          'JPY',
-          'CHF',
-          'AUD',
-          'CNY',
-          'ILS',
-          'ETH',
-          'XRP',
-          'DOGE',
-        ],
-        expenses: [
-          {
-            id: 0,
-            value: '10',
-            currency: 'CAD',
-            method: 'Cartão de crédito',
-            tag: 'Transporte',
-            description: 'uber',
-            exchangeRates: mockData,
-          },
-        ],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE2 });
+    
+    const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
 
     const { pathname } = history.location;
     expect(pathname).toBe('/carteira');
@@ -193,7 +195,7 @@ describe('teste da rota "/carteira"', () => {
     userEvent.type(inputValue, '20');
     userEvent.type(inputDescription, 'lazer');
     await waitFor(() => userEvent.selectOptions(selectCoin, 'USD'));
-    await waitFor(() => userEvent.selectOptions(selectMethod, 'Dinheiro'));
+    // await waitFor(() => userEvent.selectOptions(selectMethod, 'Dinheiro'));
     await waitFor(() => userEvent.selectOptions(selectTag, 'Transporte'));
 
     const btnEditExpense = screen.getByRole('button', {
@@ -217,45 +219,8 @@ describe('teste da rota "/carteira"', () => {
     //   expect(inputValueField.value).toBe('10');
     // });
   });
-  test.only('Verifica a eliminação dos itens na tabela', async () => {
-    const INITIAL_STATE2 = {
-      user: {
-        email: emailTeste,
-      },
-      wallet: {
-        currencies: [
-          'USD',
-          'CAD',
-          'GBP',
-          'ARS',
-          'BTC',
-          'LTC',
-          'EUR',
-          'JPY',
-          'CHF',
-          'AUD',
-          'CNY',
-          'ILS',
-          'ETH',
-          'XRP',
-          'DOGE',
-        ],
-        expenses: [
-          {
-            id: 0,
-            value: '10',
-            currency: 'CAD',
-            method: 'Cartão de crédito',
-            tag: 'Transporte',
-            description: 'uber',
-            exchangeRates: mockData,
-          },
-        ],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE2 });
+  test('Verifica a eliminação dos itens na tabela', async () => {    
+    const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
 
     expect(screen.getByRole('cell', { name: /uber/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /transporte/i })).toBeInTheDocument();
@@ -283,4 +248,4 @@ describe('teste da rota "/carteira"', () => {
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });
-});
+})
