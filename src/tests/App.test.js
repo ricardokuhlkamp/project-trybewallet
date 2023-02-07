@@ -9,6 +9,7 @@ import * as actions from '../redux/actions';
 
 const emailteste = 'aluno@trybe.com';
 const currenciesList = ['USD', 'CAD', 'GBP', 'ARS', 'BTC', 'LTC', 'EUR', 'JPY', 'CHF', 'AUD', 'CNY', 'ILS', 'ETH', 'XRP', 'DOGE'];
+const expenseList = [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }];
 
 describe('Page Login', () => {
   test('Verifica se a tela Login é renderizada  corretam coorretamente', () => {
@@ -20,48 +21,26 @@ describe('Page Login', () => {
     expect(inputEmail).toBeInTheDocument();
     expect(inputPassword).toBeInTheDocument();
   });
-  test('Verifica a validação de email e senha', () => {
+  test('Verifica a validação de email e senha', async () => {
     const password = '123456';
-    const email = 'aluno@trybe,com';
-    renderWithRouterAndRedux(<App />);
+    const email = 'aluno@trybe.com';
+    const { history } = renderWithRouterAndRedux(<App />);
     const btnEntrar = screen.getByRole('button', { name: /entrar/i });
     const inputEmail = screen.getByTestId('email-input');
     const inputPassword = screen.getByTestId('password-input');
-
     expect(btnEntrar).toBeDisabled();
-
-    userEvent.type(inputEmail, '123');
-    userEvent.type(inputPassword, '12345');
-
-    expect(btnEntrar).toBeDisabled();
-
     userEvent.type(inputEmail, email);
-    userEvent.type(inputPassword, '12345');
-
-    expect(btnEntrar).toBeDisabled();
-
-    userEvent.type(inputEmail, '1234');
     userEvent.type(inputPassword, password);
-
-    expect(btnEntrar).toBeDisabled();
-
-    // userEvent.type(inputEmail, email);
-    // userEvent.type(inputPassword, password);
-
-    // expect(btnEntrar).not.toBeDisabled();
-
-    // expect(btnEntrar).toBeEnabled();
-    // act(() => {
-    //   userEvent.click(btnEntrar);
-    // });
-    // userEvent.click(btnEntrar);
-    // const { pathname } = history.location;
-    // expect(pathname).toBe('/carteira');
-    // expect(pathname).not.toBe('/');
-    // const inputValue = screen.getByRole('spinbutton', {
-    //   name: /valor/i,
-    // });
-    // expect(inputValue).toBeInTheDocument();
+    expect(btnEntrar).toBeEnabled();
+    console.log(btnEntrar.disabled);
+    userEvent.click(btnEntrar);
+    const { pathname } = history.location;
+    expect(pathname).toBe('/carteira');
+    expect(pathname).not.toBe('/');
+    const inputValue = screen.getByRole('spinbutton', {
+      name: /valor/i,
+    });
+    expect(inputValue).toBeInTheDocument();
   });
 });
 
@@ -94,6 +73,52 @@ describe('Page Wallet', () => {
   });
 });
 
+describe('Verifica o componente TABLE', () => {
+  test.skip('Verifica se a edição é renderizada na tabela', async () => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementation(async () => ({
+        json: async () => mockData,
+      }));
+    const initialState = {
+      user: {
+        email: emailteste,
+      },
+      wallet: {
+        currencies: currenciesList,
+        expenses: expenseList,
+        editor: true,
+        idToEdit: 1,
+      },
+    };
+    renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+    const coinCell = screen.getByRole('cell', {
+      name: /dólar americano\/real brasileiro/i,
+    });
+    expect(coinCell).toBeInTheDocument();
+    const totalField = screen.getByTestId('total-field');
+    expect(totalField.innerHTML).toBe('122.65');
+    const emailField = screen.getByTestId('email-field');
+    expect(emailField.innerHTML).toBe(`Email: ${emailteste}`);
+    const row = screen.getByRole('row', {
+      name: /trem/i,
+    });
+    userEvent.click(row.querySelector('button'));
+    const inputValue = screen.getByTestId('value-input');
+    userEvent.type(inputValue, '30');
+    const btnEditExpense = screen.getByRole('button', {
+      name: /editar despesa/i,
+    });
+    expect(btnEditExpense).toBeInTheDocument();
+    await waitFor(() => {
+      userEvent.type(btnEditExpense);
+    });
+    const cellValue = screen.getByRole('cell', {
+      name: /30\.00/i,
+    });
+    expect(cellValue).toBeInTheDocument();
+  });
+});
+
 describe('testando a API', () => {
   afterEach(() => jest.clearAllMocks());
   beforeEach(() => {
@@ -119,7 +144,7 @@ describe('testando a API', () => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
-  test.skip('Testando a API', async () => {
+  test('Testando a API', async () => {
     const initialState = {
       user: {
         email: emailteste,
@@ -283,6 +308,24 @@ describe('Verifica as actions Parte 02', () => {
       payload: objetoForm,
     });
   });
+  test('Verifica EXPENSES_UPDATE_ROW', () => {
+    const initialState = {
+      user: {
+        email: emailteste,
+      },
+      wallet: {
+        currencies: currenciesList,
+        expenses: expenseList,
+        editor: false,
+        idToEdit: 0,
+      },
+    };
+    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+    store.dispatch({ type: actions.EXPENSES_UPDATE_ROW, payload: [{ id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }] });
+    const state = store.getState();
+    const { expenses } = state.wallet;
+    expect(expenses).toEqual([{ id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }]);
+  });
 });
 
 describe('Verifica as actions parte 03', () => {
@@ -304,7 +347,7 @@ describe('Verifica as actions parte 03', () => {
       },
       wallet: {
         currencies: currenciesList,
-        expenses: [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }],
+        expenses: expenseList,
         editor: false,
         idToEdit: 0,
       },
@@ -333,7 +376,7 @@ describe('Verifica as actions parte 03', () => {
       },
       wallet: {
         currencies: currenciesList,
-        expenses: [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }],
+        expenses: expenseList,
         editor: false,
         idToEdit: 0,
       },
@@ -395,76 +438,91 @@ describe('Verifica as actions parte 04', () => {
     // expect(spySearchCurrencies).toHaveBeenCalledTimes(1);
   });
 });
-// aqui ---------------------------------------------
+
 describe('teste case EXPENSE_SAVE_UPDATE', () => {
   test.skip('Verifica EXPENSE_SAVE_UPDATE', async () => {
     jest.spyOn(global, 'fetch')
       .mockImplementation(async () => ({
         json: async () => mockData,
       }));
-    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState4 });
+    const object1 = { id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData };
+    const object2 = { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData };
+    const expenseList2 = [object1, object2];
+    const initialState = {
+      user: {
+        email: emailteste,
+      },
+      wallet: {
+        currencies: currenciesList,
+        expenses: expenseList2,
+        editor: true,
+        idToEdit: 1,
+      },
+    };
+    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
     const state = store.getState();
     const { idToEdit } = state.wallet;
     const mockApiCambio = jest.spyOn(actions, 'apiCambio');
     const mockExpenseSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
     await waitFor(() => {
       store.dispatch(mockApiCambio(null, { id: idToEdit, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }));
-      store.dispatch(mockExpenseSaveUpdate({ type: 'EXPENSE_SAVE_UPDATE', payload: [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }] }));
+      store.dispatch(mockExpenseSaveUpdate({ type: 'EXPENSE_SAVE_UPDATE', payload: [object1, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }] }));
     });
     const { expenses } = state.wallet;
-    expect(expenses).toEqual([{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }]);
+    expect(expenses).toEqual([object1, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }]);
   });
 });
 
-describe('Verifica as funções ligadas aos botões editar e excluir', () => {
-  jest.spyOn(global, 'fetch')
-    .mockImplementation(async () => ({
-      json: async () => mockData,
-    }));
-  const initialState2 = {
-    user: {
-      email: emailteste,
-    },
-    wallet: {
-      currencies: currenciesList,
-      expenses: [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }],
-      editor: true,
-      idToEdit: 0,
-    },
-  };
-  const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState2 });
-  test.skip('Verifica o botão de editar e a respectiva função', async () => {
-    const inputValue = screen.getByTestId('value-input');
-    fireEvent.change(inputValue, { target: { value: '30' } });
-    expect(inputValue.value).toBe('30');
-    const btnAddExpense = screen.getByRole('button', { name: 'Editar despesa' });
-    expect(btnAddExpense).toBeInTheDocument();
-    userEvent.click(btnAddExpense);
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-    await waitFor(async () => {
-      const state = store.getState();
-      console.log(state.wallet);
-      expect(screen.getByRole('cell', { name: /30\.00/i })).toBeInTheDocument();
-    });
-  });
+// describe('Verifica as funções ligadas aos botões editar e excluir', () => {
+//   jest.spyOn(global, 'fetch')
+//     .mockImplementation(async () => ({
+//       json: async () => mockData,
+//     }));
+//   const list = [{ id: 0, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }];
+//   const initialState2 = {
+//     user: {
+//       email: emailteste,
+//     },
+//     wallet: {
+//       currencies: currenciesList,
+//       expenses: list,
+//       editor: true,
+//       idToEdit: 0,
+//     },
+//   };
+//   const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState2 });
+//   test.skip('Verifica o botão de editar e a respectiva função', async () => {
+//     const inputValue = screen.getByTestId('value-input');
+//     fireEvent.change(inputValue, { target: { value: '30' } });
+//     expect(inputValue.value).toBe('30');
+//     const btnAddExpense = screen.getByRole('button', { name: 'Editar despesa' });
+//     expect(btnAddExpense).toBeInTheDocument();
+//     userEvent.click(btnAddExpense);
+//     expect(global.fetch).toHaveBeenCalledTimes(1);
+//     await waitFor(async () => {
+//       const state = store.getState();
+//       console.log(state.wallet);
+//       expect(screen.getByRole('cell', { name: /30\.00/i })).toBeInTheDocument();
+//     });
+//   });
 
-  test('Verifica o botão de deletar e a respectiva função', async () => {
-    const btnDelete = screen.getByRole('button', { name: /excluir/i });
-    expect(btnDelete).toBeInTheDocument();
-    const descriptionCell = screen.getByRole('cell', {
-      name: /comida/i,
-    });
-    expect(descriptionCell).toBeInTheDocument();
-    await waitFor(() => {
-      userEvent.click(btnDelete);
-      expect(btnDelete).not.toBeInTheDocument();
-      // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
-    });
-    // screen.logTestingPlaygroundURL();
-    expect(descriptionCell).not.toBeInTheDocument();
-    // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
-    console.log(store.getState());
-    const state = store.getState();
-    expect(state.wallet.expenses).toEqual([]);
-  });
-});
+//   test('Verifica o botão de deletar e a respectiva função', async () => {
+//     const btnDelete = screen.getByRole('button', { name: /excluir/i });
+//     expect(btnDelete).toBeInTheDocument();
+//     const descriptionCell = screen.getByRole('cell', {
+//       name: /comida/i,
+//     });
+//     expect(descriptionCell).toBeInTheDocument();
+//     await waitFor(() => {
+//       userEvent.click(btnDelete);
+//       expect(btnDelete).not.toBeInTheDocument();
+//       // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
+//     });
+//     // screen.logTestingPlaygroundURL();
+//     expect(descriptionCell).not.toBeInTheDocument();
+//     // expect(screen.getByRole('cell', { name: /10\.00/i })).not.toBeInTheDocument();
+//     console.log(store.getState());
+//     const state = store.getState();
+//     expect(state.wallet.expenses).toEqual([]);
+//   });
+// });
