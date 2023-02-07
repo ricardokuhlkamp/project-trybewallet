@@ -4,7 +4,7 @@ import {
   // SEARCH_BEGIN,
   SEARCH_CURRENCIES,
   EXPENSES_OBJECT_LIST,
-  EXPENSES_UPDATE_ROW,
+  EXPENSES_DELETE_ROW,
   ID_EXPENSE_EDIT,
   EXPENSE_EDIT,
   EXPENSE_SAVE_UPDATE,
@@ -31,7 +31,7 @@ const wallet = (state = INITIAL_STATE, action) => {
     return {
       ...state, expenses: [...state.expenses, action.payload],
     };
-  case EXPENSES_UPDATE_ROW:
+  case EXPENSES_DELETE_ROW:
     return {
       ...state, expenses: action.payload,
     };

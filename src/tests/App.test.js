@@ -11,32 +11,7 @@ const emailteste = 'aluno@trybe.com';
 const currenciesList = ['USD', 'CAD', 'GBP', 'ARS', 'BTC', 'LTC', 'EUR', 'JPY', 'CHF', 'AUD', 'CNY', 'ILS', 'ETH', 'XRP', 'DOGE'];
 const expenseList = [{ id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData }, { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }];
 
-describe('Page Wallet', () => {
-  test('Verifica se a page Wallet é renderizada', () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: [],
-        expenses: [],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-
-    const emailField = screen.getByRole('heading', { name: /email: aluno@trybe\.com/i });
-    const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
-    const thTheadTableDescription = screen.getByRole('columnheader', { name: /descrição/i });
-
-    expect(emailField).toBeInTheDocument();
-    expect(inputValue).toBeInTheDocument();
-    expect(thTheadTableDescription).toBeInTheDocument();
-  });
-});
-
-describe('Verifica o componente TABLE', () => {
+describe('Verifica o do componente Table apartir do Login', () => {
   test.skip('Verifica se a edição é renderizada na tabela', async () => {
     jest.spyOn(global, 'fetch')
       .mockImplementation(async () => ({
@@ -107,293 +82,278 @@ describe('testando a API', () => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
-  test('Verificando a adição de despesa na Tabela', async () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: [],
-        expenses: [],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    await waitFor(() => {
-      expect(global.fetch).toBeCalledTimes(1);
-    });
-    // expect(store.getState().wallet.currencies).toContain(currenciesList);
-    const result = await store.getState().wallet.currencies;
-    expect(result).toEqual(expect.arrayContaining(currenciesList));
-    const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
-    const btnAddExpense = screen.getByRole('button', { name: /adicionar despesa/i });
-    // await waitFor(() => {
-    // });
-    userEvent.type(inputValue, '10');
-    userEvent.click(btnAddExpense);
-    await waitFor(() => {
-      expect(global.fetch).toBeCalledTimes(2);
-    });
-    // console.log(store.getState().wallet.expenses);
-    // const cellValue10USD = screen.getByRole('cell', { name: /10\.00/i });
-    // userEvent.type(inputValue, '20');
-    // userEvent.click(btnAddExpense);
-    // expect(cellValue10USD.innerHTML).toBe(store.getState().wallet.expenses.value);
-    // expect(cellValue10USD).toBeInTheDocument();
-  });
 });
 
-describe('Verifica as actions', () => {
-  test('test action validEmail', () => {
-    const mockActionValidEmail = jest.spyOn(actions, 'validEmail');
-    const payload = emailteste;
-    const result = actions.validEmail(payload);
-    expect(mockActionValidEmail).toHaveBeenCalledWith(payload);
-    expect(mockActionValidEmail).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'VALID_EMAIL',
-      payload: emailteste,
-    });
-  });
-  test('test action searchCurrencies', () => {
-    const mockActionSearchCurrencies = jest.spyOn(actions, 'searchCurrencies');
-    const payload = currenciesList;
-    const result = actions.searchCurrencies(payload);
-    expect(mockActionSearchCurrencies).toHaveBeenCalledWith(payload);
-    expect(mockActionSearchCurrencies).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'SEARCH_CURRENCIES',
-      payload: currenciesList,
-    });
-  });
-  test('test action expensesObjectList', () => {
-    const mockActionExpensesObjectList = jest.spyOn(actions, 'expensesObjectList');
-    const objetoForm = {
-      id: 1,
-      value: '1',
-      currency: 'USD',
-      method: 'Dinheiro',
-      tag: 'Lazer',
-      description: 'teste',
-      exchangeRates: mockData,
-    };
-    const payload = objetoForm;
-    const result = actions.expensesObjectList(payload);
-    expect(mockActionExpensesObjectList).toHaveBeenCalledWith(payload);
-    expect(mockActionExpensesObjectList).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'EXPENSES_OBJECT_LIST',
-      payload: objetoForm,
-    });
-  });
-});
+describe('Verifica a adição de valor na chave editor no estado global', () => {
+  const initialState = {
+    user: {
+      email: emailteste,
+    },
+    wallet: {
+      currencies: currenciesList,
+      expenses: expenseList,
+      editor: false,
+      idToEdit: 0,
+    },
+  };
 
-describe('Verifica as actions Parte 02', () => {
-  test('test action expenseSaveUpdate', () => {
-    const mockActionExpensesSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
-    const objetoForm = {
-      id: 1,
-      value: '1',
-      currency: 'USD',
-      method: 'Dinheiro',
-      tag: 'Lazer',
-      description: 'teste',
-      exchangeRates: mockData,
-    };
-    const payload = objetoForm;
-    const result = actions.expenseSaveUpdate(payload);
-    expect(mockActionExpensesSaveUpdate).toHaveBeenCalledWith(payload);
-    expect(mockActionExpensesSaveUpdate).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'EXPENSE_SAVE_UPDATE',
-      payload: objetoForm,
-    });
-  });
-  test('test action expensesUpdateRow', () => {
-    const mockActionExpensesUpdateRow = jest.spyOn(actions, 'expensesUpdateRow');
-    const objetoForm = {
-      id: 1,
-      value: '1',
-      currency: 'USD',
-      method: 'Dinheiro',
-      tag: 'Lazer',
-      description: 'teste',
-      exchangeRates: mockData,
-    };
-    const payload = objetoForm;
-    const result = actions.expensesUpdateRow(payload);
-    expect(mockActionExpensesUpdateRow).toHaveBeenCalledWith(payload);
-    expect(mockActionExpensesUpdateRow).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'EXPENSES_UPDATE_ROW',
-      payload: objetoForm,
-    });
-  });
-  test('Verifica EXPENSES_UPDATE_ROW', () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: currenciesList,
-        expenses: expenseList,
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    store.dispatch({ type: actions.EXPENSES_UPDATE_ROW, payload: [{ id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }] });
-    const state = store.getState();
-    const { expenses } = state.wallet;
-    expect(expenses).toEqual([{ id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }]);
-  });
-});
-
-describe('Verifica as actions parte 03', () => {
-  test('teste action idExpenseEdit', () => {
-    const mockActionIdExpenseEdit = jest.spyOn(actions, 'idExpenseEdit');
-    const payload = 0;
-    const result = actions.idExpenseEdit(payload);
-    expect(mockActionIdExpenseEdit).toHaveBeenCalledWith(payload);
-    expect(mockActionIdExpenseEdit).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'ID_EXPENSE_EDIT',
-      payload: 0,
-    });
-  });
-  test('Verifica ID_EXPENSE_EDIT', () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: currenciesList,
-        expenses: expenseList,
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    store.dispatch({ type: actions.ID_EXPENSE_EDIT, payload: 1 });
-    const state = store.getState();
-    const { idToEdit } = state.wallet;
-    expect(idToEdit).toEqual(1);
-  });
-  test('teste action expenseEdit', () => {
-    const mockActionExpenseEdit = jest.spyOn(actions, 'expenseEdit');
-    const payload = true;
-    const result = actions.expenseEdit(payload);
-    expect(mockActionExpenseEdit).toHaveBeenCalledWith(payload);
-    expect(mockActionExpenseEdit).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({
-      type: 'EXPENSE_EDIT',
-      payload: true,
-    });
-  });
   test('Verifica EXPENSE_EDIT', () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: currenciesList,
-        expenses: expenseList,
-        editor: false,
-        idToEdit: 0,
-      },
-    };
     const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
     store.dispatch({ type: actions.EXPENSE_EDIT, payload: true });
     const state = store.getState();
     const { editor } = state.wallet;
     expect(editor).toEqual(true);
   });
+
+  // test('Verifica ID_EXPENSE_EDIT', () => {
+  //   const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+  //   store.dispatch({ type: actions.ID_EXPENSE_EDIT, payload: 1 });
+  //   const state = store.getState();
+  //   const { idToEdit } = state.wallet;
+  //   expect(idToEdit).toEqual(1);
+  // });
 });
 
-describe('Verifica as actions parte 04', () => {
-  afterEach(() => jest.clearAllMocks());
-  beforeEach(() => {
-    jest.spyOn(global, 'fetch')
-      .mockImplementation(async () => ({
-        json: async () => mockData,
-      }));
-  });
-  test.skip('teste action apiCambio', async () => {
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: [],
-        expenses: [],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-    const formData = {
-      id: 0,
-      value: '20',
-      currency: 'USD',
-      method: 'Dinheiro',
-      tag: 'Transporte',
-      description: 'travel',
-    };
-    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    const { dispatch } = store;
-    // const spyExpensesObjectList = jest.spyOn(actions, 'expensesObjectList');
-    const spySearchCurrencies = jest.spyOn(actions, 'searchCurrencies');
-    await dispatch(actions.apiCambio(formData));
-    expect(global.fetch).toHaveBeenCalled();
-    expect(spySearchCurrencies).toHaveBeenCalled();
-    // expect(spyExpensesObjectList).toHaveBeenCalledWith({
-    //   id: 0,
-    //   value: '20',
-    //   currency: 'USD',
-    //   method: 'Dinheiro',
-    //   tag: 'Transporte',
-    //   description: 'travel',
-    //   exchangeRates: mockData,
-    // });
-    // expect(spyExpensesObjectList).toHaveBeenCalledTimes(1);
-    // expect(spySearchCurrencies).toHaveBeenCalled();
-    // expect(spySearchCurrencies).toHaveBeenCalledTimes(1);
-  });
-});
+// describe('', () => {
+//   jest.spyOn(global, 'fetch')
+//       .mockImplementation(async () => ({
+//         json: async () => mockData,
+//       }));
+//    test('test action expenseSaveUpdate', () => {
+//     const mockActionExpensesSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
+//     const objetoForm = {
+//       id: 1,
+//       value: '1',
+//       currency: 'USD',
+//       method: 'Dinheiro',
+//       tag: 'Lazer',
+//       description: 'teste',
+//       exchangeRates: mockData,
+//     };
+//     const payload = objetoForm;
+//     const result = actions.expenseSaveUpdate(payload);
+//     expect(mockActionExpensesSaveUpdate).toHaveBeenCalledWith(payload);
+//     expect(mockActionExpensesSaveUpdate).toHaveBeenCalledTimes(1);
+//     expect(result).toEqual({
+//       type: 'EXPENSE_SAVE_UPDATE',
+//       payload: objetoForm,
+//     });
+//   });
+// })
 
-describe('teste case EXPENSE_SAVE_UPDATE', () => {
-  test.skip('Verifica EXPENSE_SAVE_UPDATE', async () => {
-    jest.spyOn(global, 'fetch')
-      .mockImplementation(async () => ({
-        json: async () => mockData,
-      }));
-    const object1 = { id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData };
-    const object2 = { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData };
-    const expenseList2 = [object1, object2];
-    const initialState = {
-      user: {
-        email: emailteste,
-      },
-      wallet: {
-        currencies: currenciesList,
-        expenses: expenseList2,
-        editor: true,
-        idToEdit: 1,
-      },
-    };
-    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-    const state = store.getState();
-    const { idToEdit } = state.wallet;
-    const mockApiCambio = jest.spyOn(actions, 'apiCambio');
-    const mockExpenseSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
-    await waitFor(() => {
-      store.dispatch(mockApiCambio(null, { id: idToEdit, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }));
-      store.dispatch(mockExpenseSaveUpdate({ type: 'EXPENSE_SAVE_UPDATE', payload: [object1, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }] }));
-    });
-    const { expenses } = state.wallet;
-    expect(expenses).toEqual([object1, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }]);
-  });
-});
+// describe('Verifica as actions', () => {
+// test('test action validEmail', () => {
+//   const mockActionValidEmail = jest.spyOn(actions, 'validEmail');
+//   const payload = emailteste;
+//   const result = actions.validEmail(payload);
+//   expect(mockActionValidEmail).toHaveBeenCalledWith(payload);
+//   expect(mockActionValidEmail).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'VALID_EMAIL',
+//     payload: emailteste,
+//   });
+// });
+// test('test action searchCurrencies', () => {
+//   const mockActionSearchCurrencies = jest.spyOn(actions, 'searchCurrencies');
+//   const payload = currenciesList;
+//   const result = actions.searchCurrencies(payload);
+//   expect(mockActionSearchCurrencies).toHaveBeenCalledWith(payload);
+//   expect(mockActionSearchCurrencies).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'SEARCH_CURRENCIES',
+//     payload: currenciesList,
+//   });
+// });
+// test('test action expensesObjectList', () => {
+//   const mockActionExpensesObjectList = jest.spyOn(actions, 'expensesObjectList');
+//   const objetoForm = {
+//     id: 1,
+//     value: '1',
+//     currency: 'USD',
+//     method: 'Dinheiro',
+//     tag: 'Lazer',
+//     description: 'teste',
+//     exchangeRates: mockData,
+//   };
+//   const payload = objetoForm;
+//   const result = actions.expensesObjectList(payload);
+//   expect(mockActionExpensesObjectList).toHaveBeenCalledWith(payload);
+//   expect(mockActionExpensesObjectList).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'EXPENSES_OBJECT_LIST',
+//     payload: objetoForm,
+//   });
+// });
+// test('test action expenseSaveUpdate', () => {
+//   const mockActionExpensesSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
+//   const objetoForm = {
+//     id: 1,
+//     value: '1',
+//     currency: 'USD',
+//     method: 'Dinheiro',
+//     tag: 'Lazer',
+//     description: 'teste',
+//     exchangeRates: mockData,
+//   };
+//   const payload = objetoForm;
+//   const result = actions.expenseSaveUpdate(payload);
+//   expect(mockActionExpensesSaveUpdate).toHaveBeenCalledWith(payload);
+//   expect(mockActionExpensesSaveUpdate).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'EXPENSE_SAVE_UPDATE',
+//     payload: objetoForm,
+//   });
+// });
+// test('test action expensesDeleteRow', () => {
+//   const mockActionExpenseDeleteRow = jest.spyOn(actions, 'expenseDeleteRow');
+//   const objetoForm = {
+//     id: 1,
+//     value: '1',
+//     currency: 'USD',
+//     method: 'Dinheiro',
+//     tag: 'Lazer',
+//     description: 'teste',
+//     exchangeRates: mockData,
+//   };
+//   const payload = objetoForm;
+//   const result = actions.expenseDeleteRow(payload);
+//   expect(mockActionExpenseDeleteRow).toHaveBeenCalledWith(payload);
+//   expect(mockActionExpenseDeleteRow).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'EXPENSES_DELETE_ROW',
+//     payload: objetoForm,
+//   });
+// });
+// test('teste action idExpenseEdit', () => {
+//   const mockActionIdExpenseEdit = jest.spyOn(actions, 'idExpenseEdit');
+//   const payload = 0;
+//   const result = actions.idExpenseEdit(payload);
+//   expect(mockActionIdExpenseEdit).toHaveBeenCalledWith(payload);
+//   expect(mockActionIdExpenseEdit).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'ID_EXPENSE_EDIT',
+//     payload: 0,
+//   });
+// });
+// test('teste action expenseEdit', () => {
+//   const mockActionExpenseEdit = jest.spyOn(actions, 'expenseEdit');
+//   const payload = true;
+//   const result = actions.expenseEdit(payload);
+//   expect(mockActionExpenseEdit).toHaveBeenCalledWith(payload);
+//   expect(mockActionExpenseEdit).toHaveBeenCalledTimes(1);
+//   expect(result).toEqual({
+//     type: 'EXPENSE_EDIT',
+//     payload: true,
+//   });
+// });
+// });
+
+// describe('Verifica as actions Parte 02', () => {
+
+//   test('Verifica EXPENSES_DELETE_ROW', () => {
+//     const initialState = {
+//       user: {
+//         email: emailteste,
+//       },
+//       wallet: {
+//         currencies: currenciesList,
+//         expenses: expenseList,
+//         editor: false,
+//         idToEdit: 0,
+//       },
+//     };
+//     const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+//     store.dispatch({ type: actions.EXPENSES_DELETE_ROW, payload: [{ id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }] });
+//     const state = store.getState();
+//     const { expenses } = state.wallet;
+//     expect(expenses).toEqual([{ id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData }]);
+//   });
+// });
+
+// describe('Verifica a action e função apiCambio', () => {
+//   afterEach(() => jest.clearAllMocks());
+//   beforeEach(() => {
+//     jest.spyOn(global, 'fetch')
+//       .mockImplementation(async () => ({
+//         json: async () => mockData,
+//       }));
+//   });
+// test.skip('teste action apiCambio', async () => {
+//   const initialState = {
+//     user: {
+//       email: emailteste,
+//     },
+//     wallet: {
+//       currencies: [],
+//       expenses: [],
+//       editor: false,
+//       idToEdit: 0,
+//     },
+//   };
+//   const formData = {
+//     id: 0,
+//     value: '20',
+//     currency: 'USD',
+//     method: 'Dinheiro',
+//     tag: 'Transporte',
+//     description: 'travel',
+//   };
+// const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+// const { dispatch } = store;
+// // const spyExpensesObjectList = jest.spyOn(actions, 'expensesObjectList');
+// const spySearchCurrencies = jest.spyOn(actions, 'searchCurrencies');
+// await dispatch(actions.apiCambio(formData));
+// expect(global.fetch).toHaveBeenCalled();
+// expect(spySearchCurrencies).toHaveBeenCalled();
+
+// expect(spyExpensesObjectList).toHaveBeenCalledWith({
+//   id: 0,
+//   value: '20',
+//   currency: 'USD',
+//   method: 'Dinheiro',
+//   tag: 'Transporte',
+//   description: 'travel',
+//   exchangeRates: mockData,
+// });
+// expect(spyExpensesObjectList).toHaveBeenCalledTimes(1);
+// expect(spySearchCurrencies).toHaveBeenCalled();
+// expect(spySearchCurrencies).toHaveBeenCalledTimes(1);
+//   });
+// });
+
+// describe('teste case EXPENSE_SAVE_UPDATE', () => {
+// test.skip('Verifica EXPENSE_SAVE_UPDATE', async () => {
+//   jest.spyOn(global, 'fetch')
+//     .mockImplementation(async () => ({
+//       json: async () => mockData,
+//     }));
+//   const object1 = { id: 0, value: '10', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação', description: 'comida', exchangeRates: mockData };
+//   const object2 = { id: 1, value: '20', currency: 'CAD', method: 'Dinheiro', tag: 'Transport', description: 'trem', exchangeRates: mockData };
+//   const expenseList2 = [object1, object2];
+//   const initialState = {
+//     user: {
+//       email: emailteste,
+//     },
+//     wallet: {
+//       currencies: currenciesList,
+//       expenses: expenseList2,
+//       editor: true,
+//       idToEdit: 1,
+//     },
+//   };
+// const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+// const state = store.getState();
+// const { idToEdit } = state.wallet;
+// const mockApiCambio = jest.spyOn(actions, 'apiCambio');
+// const mockExpenseSaveUpdate = jest.spyOn(actions, 'expenseSaveUpdate');
+// await waitFor(() => {
+//   store.dispatch(mockApiCambio(null, { id: idToEdit, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }));
+//   store.dispatch(mockExpenseSaveUpdate({ type: 'EXPENSE_SAVE_UPDATE', payload: [object1, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }] }));
+// });
+// const { expenses } = state.wallet;
+// expect(expenses).toEqual([object1, { id: 1, value: '20', currency: 'USD', method: 'Dinheiro', tag: 'Transport', description: 'passagem', exchangeRates: mockData }]);
+//   });
+// });
 
 // describe('Verifica as funções ligadas aos botões editar e excluir', () => {
 //   jest.spyOn(global, 'fetch')

@@ -21,14 +21,15 @@ class WalletForm extends Component {
     dispatch(apiCambio());
   }
 
-  componentDidUpdate() {
-    const { id } = this.state;
+  componentDidUpdate(prevProps) {
     const { editor, idToEdit, expenses } = this.props;
-    const formDataRequest = expenses.filter((e) => (
-      e.id === idToEdit
-    ))[0];
-    if (editor && id !== formDataRequest.id) {
-      this.setState({ ...formDataRequest });
+    if (editor !== prevProps.editor) {
+      const formDataRequest = expenses.filter((e) => (
+        e.id === idToEdit
+      ))[0];
+      if (editor) {
+        this.setState({ ...formDataRequest });
+      }
     }
   }
 
@@ -79,7 +80,7 @@ class WalletForm extends Component {
   };
 
   handleClickUpdate = () => {
-    const { dispatch } = this.props;
+    const { dispatch, expenses } = this.props;
     const {
       value,
       currency,
@@ -99,6 +100,7 @@ class WalletForm extends Component {
     dispatch(apiCambio(null, updateExpense));
     dispatch(expenseEdit(false));
     this.setState({
+      id: expenses[expenses.length - 1].id + 1,
       value: '',
       currency: 'USD',
       method: 'Dinheiro',
@@ -231,7 +233,9 @@ class WalletForm extends Component {
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
-  expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  })).isRequired,
   idToEdit: PropTypes.number.isRequired,
   editor: PropTypes.bool.isRequired,
 };

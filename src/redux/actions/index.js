@@ -14,7 +14,7 @@ export const SEARCH_ERROR = 'SEARCH_ERROR';
 
 export const EXPENSES_OBJECT_LIST = 'EXPENSES_OBJECT_LIST';
 
-export const EXPENSES_UPDATE_ROW = 'EXPENSES_UPDATE_ROW';
+export const EXPENSES_DELETE_ROW = 'EXPENSES_DELETE_ROW';
 
 export const ID_EXPENSE_EDIT = 'ID_EXPENSE_EDIT';
 export const EXPENSE_EDIT = 'EXPENSE_EDIT';
@@ -73,8 +73,8 @@ export function apiCambio(formData, formDataEdit) {
   };
 }
 
-export const expensesUpdateRow = (payload) => ({
-  type: EXPENSES_UPDATE_ROW,
+export const expenseDeleteRow = (payload) => ({
+  type: EXPENSES_DELETE_ROW,
   payload,
 });
 
