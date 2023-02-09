@@ -1,13 +1,9 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// import { act } from 'react-dom/test-utils';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
-// import App from '../App';
 import Wallet from '../pages/Wallet';
 import mockData from './helpers/mockData';
-import { act } from 'react-dom/test-utils';
-// import * as actions from '../redux/actions';
 
 const emailTeste = 'tryber@trybe.com';
 const creditCardText = 'Cartão de crédito';
@@ -255,7 +251,7 @@ describe('', () => {
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });
-  test('Verificando a adição de despesa na Tabela', async () => {    
+  test.only('Verificando a adição de despesa na Tabela', async () => {
     const currenciesList = [
       'USD', 'CAD', 'EUR',
       'GBP', 'ARS', 'BTC',
@@ -280,19 +276,19 @@ describe('', () => {
         idToEdit: 0,
       },
     };
-    
+
     const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState0 });
     await waitFor(() => {
       expect(global.fetch).toBeCalledTimes(1);
     });
-    
+
     expect(store.getState().wallet.currencies).toEqual(currenciesList);
     const result = await store.getState().wallet.currencies;
     expect(result).toEqual(expect.arrayContaining(currenciesList));
-  
+
     const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
     const btnAddExpense = screen.getByRole('button', { name: /adicionar despesa/i });
-    
+
     userEvent.type(inputValue, '10');
     userEvent.click(btnAddExpense);
     await waitFor(() => {
@@ -350,7 +346,6 @@ describe('teste de edição', () => {
   };
 
   test('Verifica a renderização da edição dos itens na tabela', async () => {
- 
     const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
     const { pathname } = history.location;
     expect(pathname).toBe('/carteira');
