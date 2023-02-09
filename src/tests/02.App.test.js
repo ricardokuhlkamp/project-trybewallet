@@ -1,12 +1,9 @@
 import React from 'react';
-import { waitFor } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
-// import { act } from 'react-dom/test-utils';
+import { act } from 'react-dom/test-utils';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 import App from '../App';
 import mockData from './helpers/mockData';
 import * as actions from '../redux/actions';
-import { act } from 'react-dom/test-utils';
 
 const emailteste = 'aluno@trybe.com';
 const currenciesList = ['USD', 'CAD', 'GBP', 'ARS', 'BTC', 'LTC', 'EUR', 'JPY', 'CHF', 'AUD', 'CNY', 'ILS', 'ETH', 'XRP', 'DOGE'];
@@ -32,14 +29,14 @@ describe('testando a API', () => {
         idToEdit: 0,
       },
     };
-    await act( async () => {
-      renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });   
+    await act(async () => {
+      renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
     });
     expect(global.fetch).toHaveBeenCalled();
   });
 });
 
-describe('Verifica a adição de valor na chave editor no estado global',  () => {
+describe('Verifica a adição de valor na chave editor no estado global', () => {
   const initialState = {
     user: {
       email: emailteste,
@@ -51,7 +48,7 @@ describe('Verifica a adição de valor na chave editor no estado global',  () =>
       idToEdit: 0,
     },
   };
-  
+
   test('Verifica EXPENSE_EDIT', async () => {
     await act(async () => {
       const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });

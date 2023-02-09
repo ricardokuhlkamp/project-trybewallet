@@ -1,10 +1,10 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 import Wallet from '../pages/Wallet';
 import mockData from './helpers/mockData';
-import { act } from 'react-dom/test-utils';
 
 // const emailTeste = 'tryber@trybe.com';
 // const creditCardText = 'Cartão de crédito';
@@ -38,10 +38,10 @@ describe('', () => {
       },
     };
     let state;
-    await act( async () => {
+    await act(async () => {
       const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState0 });
       state = store;
-    })
+    });
     await waitFor(() => {
       expect(global.fetch).toBeCalledTimes(1);
     });
@@ -56,10 +56,9 @@ describe('', () => {
     userEvent.type(inputValue, '10');
     await act(async () => {
       userEvent.click(btnAddExpense);
-
-    })
+    });
     await waitFor(() => {
       expect(global.fetch).toBeCalledTimes(2);
     });
   });
-})
+});
