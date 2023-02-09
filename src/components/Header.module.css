@@ -1,0 +1,38 @@
+.container {
+  display: flex;  
+  align-itens: stretch;
+}
+
+.header_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1037px;
+  height: 200px;
+  background-color: white;
+  color: #003BE5;
+  margin: auto;
+  padding: 100px
+}
+
+.logo {
+  width: 250.19px;
+  height: 52.29px;
+}
+
+.coins_and_total,
+.icone_email {
+  display: flex;
+}
+
+.coins_and_total img {
+  margin-right: 5px
+}
+
+.icone_email {
+  color: rgba(47, 193, 140, 1);
+}
+
+.icone_email img {
+  margin-right: 5px
+}

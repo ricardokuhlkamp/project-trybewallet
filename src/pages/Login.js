@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { validEmail } from '../redux/actions';
+import styles from './Login.module.css';
+import logo from '../imgs/logoTrybeWallet.png';
 
 class Login extends React.Component {
   state = {
@@ -36,36 +38,42 @@ class Login extends React.Component {
   render() {
     const { isDisabled, email, senha } = this.state;
     return (
-      <div>
-        <label htmlFor="email">
-          <input
-            placeholder="insira seu email"
-            data-testid="email-input"
-            type="email"
-            id="email"
-            value={ email }
-            name="email"
-            onChange={ this.handleChange }
-          />
-        </label>
-        <label htmlFor="senha">
-          <input
-            placeholder="insira sua senha"
-            data-testid="password-input"
-            type="senha"
-            id="senha"
-            value={ senha }
-            name="senha"
-            onChange={ this.handleChange }
-          />
-        </label>
-        <button
-          type="button"
-          disabled={ isDisabled }
-          onClick={ this.handleClick }
-        >
-          Entrar
-        </button>
+      <div className={ styles.container }>
+        <div className={ styles.container_login_password_button }>
+          <img src={ logo } alt="logo Trybe" className={ styles.logo } />
+          <label htmlFor="email">
+            <input
+              className={ styles.input_login }
+              placeholder="insira seu email"
+              data-testid="email-input"
+              type="email"
+              id="email"
+              value={ email }
+              name="email"
+              onChange={ this.handleChange }
+            />
+          </label>
+          <label htmlFor="senha">
+            <input
+              className={ styles.input_password }
+              placeholder="insira sua senha"
+              data-testid="password-input"
+              type="senha"
+              id="senha"
+              value={ senha }
+              name="senha"
+              onChange={ this.handleChange }
+            />
+          </label>
+          <button
+            className={ styles.button_enter }
+            type="button"
+            disabled={ isDisabled }
+            onClick={ this.handleClick }
+          >
+            Entrar
+          </button>
+        </div>
       </div>
     );
   }

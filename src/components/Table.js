@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { expenseDeleteRow, idExpenseEdit, expenseEdit } from '../redux/actions';
+import styles from './Table.module.css';
+import editarPicture from '../imgs/Editar.png';
+import excluirPicture from '../imgs/Vector.png';
 
 class Table extends Component {
   handleClick = (id) => {
@@ -19,11 +22,11 @@ class Table extends Component {
   render() {
     const { expenses } = this.props;
     return (
-      <div>
+      <div className={ styles.container_table }>
         <table>
           <thead>
             <tr>
-              <th>Descrição</th>
+              <th className={ styles.cell_description }>Descrição</th>
               <th>Tag</th>
               <th>Método de pagamento</th>
               <th>Valor</th>
@@ -35,9 +38,8 @@ class Table extends Component {
             </tr>
           </thead>
           <tbody>
-            { expenses.map((e) => (
+            { expenses?.map((e) => (
               <tr key={ `${Number(e.id)}` }>
-                {console.log(e.id)}
                 <td>{ e.description }</td>
                 <td>{ e.tag }</td>
                 <td>{ e.method }</td>
@@ -46,21 +48,23 @@ class Table extends Component {
                 <td>{ Number(e.exchangeRates[e.currency].ask).toFixed(2) }</td>
                 <td>{ Number(e.exchangeRates[e.currency].ask * e.value).toFixed(2) }</td>
                 <td>Real</td>
-                <td>
+                <td className={ styles.buttons }>
                   <button
+                    className={ styles.button_edit }
                     type="button"
                     data-testid="edit-btn"
                     onClick={ () => this.handleClickEdit(e.id) }
                   >
-                    Editar
+                    <img src={ editarPicture } alt="botão de editar" />
                   </button>
                   <button
+                    className={ styles.button_delete }
                     id={ Number(e.id) }
                     data-testid="delete-btn"
                     type="button"
                     onClick={ () => this.handleClick(Number(e.id)) }
                   >
-                    Excluir
+                    <img src={ excluirPicture } alt="botão de excluir" />
                   </button>
                 </td>
               </tr>

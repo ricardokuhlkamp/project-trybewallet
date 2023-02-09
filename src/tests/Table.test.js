@@ -1,15 +1,18 @@
 import React from 'react';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 // import { act } from 'react-dom/test-utils';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 // import App from '../App';
 import Wallet from '../pages/Wallet';
 import mockData from './helpers/mockData';
+import { act } from 'react-dom/test-utils';
 // import * as actions from '../redux/actions';
 
 const emailTeste = 'tryber@trybe.com';
 const creditCardText = 'Cartão de crédito';
+const editBtnTestId = 'edit-btn';
+const deleteBtnTestId = 'delete-btn';
 
 describe('teste da rota "/carteira"', () => {
   const INITIAL_STATE = {
@@ -137,9 +140,10 @@ describe('', () => {
 
     userEvent.type(inputValue, '10');
     userEvent.type(inputDescription, 'uber');
-    await waitFor(() => userEvent.selectOptions(selectCoin, 'CAD'));
-    await waitFor(() => userEvent.selectOptions(selectMethod, creditCardText));
-    await waitFor(() => userEvent.selectOptions(selectTag, 'Transporte'));
+    await screen.findByTestId('CAD');
+    userEvent.selectOptions(selectCoin, 'CAD');
+    userEvent.selectOptions(selectMethod, creditCardText);
+    userEvent.selectOptions(selectTag, 'Transporte');
     // userEvent.selectOptions(selectMethod, 'Cartão de crédito' );
     // userEvent.selectOptions(selectTag, 'Transporte');
     userEvent.click(btnAddExpense);
@@ -158,8 +162,8 @@ describe('', () => {
     expect(screen.getByRole('cell', { name: /cartão de crédito/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /10\.00/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /dólar canadense\/real brasileiro/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /editar/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /excluir/i })).toBeInTheDocument();
+    expect(screen.getByTestId(editBtnTestId)).toBeInTheDocument();
+    expect(screen.getByTestId(deleteBtnTestId)).toBeInTheDocument();
   });
 
   test('Verifica a edição dos itens na tabela', async () => {
@@ -173,10 +177,10 @@ describe('', () => {
     expect(screen.getByRole('cell', { name: /cartão de crédito/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /10\.00/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /dólar canadense\/real brasileiro/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /editar/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /excluir/i })).toBeInTheDocument();
+    expect(screen.getByTestId(editBtnTestId)).toBeInTheDocument();
+    expect(screen.getByTestId(deleteBtnTestId)).toBeInTheDocument();
 
-    const btnEdit = screen.getByTestId('edit-btn');
+    const btnEdit = screen.getByTestId(editBtnTestId);
     userEvent.click(btnEdit);
 
     const inputValueField = screen.getByTestId(testIdValue);
@@ -193,9 +197,11 @@ describe('', () => {
 
     userEvent.type(inputValueField, '20');
     userEvent.type(inputDescription, 'passeio');
-    await waitFor(() => userEvent.selectOptions(selectCoin, 'USD'));
+    await screen.findByTestId('USD');
+    userEvent.selectOptions(selectCoin, 'USD');
     // await waitFor(() => userEvent.selectOptions(selectMethod, 'Dinheiro'));
-    await waitFor(() => userEvent.selectOptions(selectTag, 'Lazer'));
+    await screen.findByTestId('Lazer');
+    userEvent.selectOptions(selectTag, 'Lazer');
 
     const btnEditExpense = screen.getByRole('button', {
       name: 'Editar despesa',
@@ -229,10 +235,10 @@ describe('', () => {
     expect(screen.getByRole('cell', { name: /cartão de crédito/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /10\.00/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /dólar canadense\/real brasileiro/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /editar/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /excluir/i })).toBeInTheDocument();
+    expect(screen.getByTestId(editBtnTestId)).toBeInTheDocument();
+    expect(screen.getByTestId(deleteBtnTestId)).toBeInTheDocument();
 
-    const btnDelete = screen.getByRole('button', { name: /excluir/i });
+    const btnDelete = screen.getByTestId(deleteBtnTestId);
     expect(btnDelete).toBeInTheDocument();
     const descriptionCell = screen.getByRole('cell', {
       name: /uber/i,
@@ -249,7 +255,7 @@ describe('', () => {
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });
-  test('Verificando a adição de despesa na Tabela', async () => {
+  test('Verificando a adição de despesa na Tabela', async () => {    
     const currenciesList = [
       'USD', 'CAD', 'EUR',
       'GBP', 'ARS', 'BTC',
@@ -274,18 +280,19 @@ describe('', () => {
         idToEdit: 0,
       },
     };
+    
     const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState0 });
     await waitFor(() => {
       expect(global.fetch).toBeCalledTimes(1);
     });
-    console.log(store.getState().wallet.currencies);
+    
     expect(store.getState().wallet.currencies).toEqual(currenciesList);
     const result = await store.getState().wallet.currencies;
     expect(result).toEqual(expect.arrayContaining(currenciesList));
+  
     const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
     const btnAddExpense = screen.getByRole('button', { name: /adicionar despesa/i });
-    // await waitFor(() => {
-    // });
+    
     userEvent.type(inputValue, '10');
     userEvent.click(btnAddExpense);
     await waitFor(() => {
@@ -343,8 +350,8 @@ describe('teste de edição', () => {
   };
 
   test('Verifica a renderização da edição dos itens na tabela', async () => {
+ 
     const { history } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState: INITIAL_STATE });
-
     const { pathname } = history.location;
     expect(pathname).toBe('/carteira');
 
@@ -360,16 +367,15 @@ describe('teste de edição', () => {
     expect(screen.getByRole('cell', { name: /40\.00/i })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: /Argentino\/Real Brasileiro/i })).toBeInTheDocument();
 
-    // const table = screen.getByRole('table');
-    // console.log(table)
-    const btnEdit = screen.getAllByTestId('edit-btn');
+    const btnEdit = screen.getAllByTestId(editBtnTestId);
     const btnEditSecond = btnEdit[1];
 
     userEvent.click(btnEditSecond);
 
     const inputValue = screen.getByTestId('value-input');
+    userEvent.clear(inputValue);
+    userEvent.type(inputValue, '60');
 
-    fireEvent.change(inputValue, { target: { value: '60' } });
     const btnAddExpense = screen.getByRole('button', {
       name: 'Editar despesa',
     });
