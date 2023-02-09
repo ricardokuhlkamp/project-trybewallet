@@ -251,7 +251,7 @@ describe('', () => {
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });
-  test.only('Verificando a adição de despesa na Tabela', async () => {
+  test('Verificando a adição de despesa na Tabela', async () => {
     const currenciesList = [
       'USD', 'CAD', 'EUR',
       'GBP', 'ARS', 'BTC',
