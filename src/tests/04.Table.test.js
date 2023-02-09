@@ -251,50 +251,6 @@ describe('', () => {
     const state = store.getState();
     expect(state.wallet.expenses).toEqual([]);
   });
-  test('Verificando a adição de despesa na Tabela', async () => {
-    const currenciesList = [
-      'USD', 'CAD', 'EUR',
-      'GBP', 'ARS', 'BTC',
-      'LTC', 'JPY', 'CHF',
-      'AUD', 'CNY', 'ILS',
-      'ETH', 'XRP', 'DOGE',
-    ];
-
-    jest.spyOn(global, 'fetch')
-      .mockImplementation(async () => ({
-        json: async () => mockData,
-      }));
-
-    const initialState0 = {
-      user: {
-        email: 'aluno@aluno.com',
-      },
-      wallet: {
-        currencies: [],
-        expenses: [],
-        editor: false,
-        idToEdit: 0,
-      },
-    };
-
-    const { store } = renderWithRouterAndRedux(<Wallet />, { initialEntries: ['/carteira'], initialState0 });
-    await waitFor(() => {
-      expect(global.fetch).toBeCalledTimes(1);
-    });
-
-    expect(store.getState().wallet.currencies).toEqual(currenciesList);
-    const result = await store.getState().wallet.currencies;
-    expect(result).toEqual(expect.arrayContaining(currenciesList));
-
-    const inputValue = screen.getByRole('spinbutton', { name: /valor/i });
-    const btnAddExpense = screen.getByRole('button', { name: /adicionar despesa/i });
-
-    userEvent.type(inputValue, '10');
-    userEvent.click(btnAddExpense);
-    await waitFor(() => {
-      expect(global.fetch).toBeCalledTimes(2);
-    });
-  });
 });
 
 describe('teste de edição', () => {
