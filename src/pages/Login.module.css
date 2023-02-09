@@ -1,47 +1,46 @@
 .container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: -4px 9px 13px rgba(3, 107, 82, 0.3);
   display: flex;
+  height: 365px;
   margin-top: 201px;
   width: 525px;
-  height: 365px;
-  background: #FFFFFF;
-  box-shadow: -4px 9px 13px rgba(3, 107, 82, 0.3);
-  border-radius: 10px;
 }
 
 .container_login_password_button {
+  align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-itens: center;
   margin: auto;
 }
 
-.input_login ,
-.input_password {
-  width: 330px;
-  height: 40px;
-  text-align: center;
-  background: #FFFFFF;
-  border: 1px solid #003BE5;
+.input_login , .input_password {
+  background: white;
+  border: 1px solid #003be5;
   border-radius: 5px;
   box-sizing: border-box;
-  margin-top: 5px
+  height: 40px;
+  margin-top: 5px;
+  text-align: center;
+  width: 330px;
 }
 
 .button_enter {
-  width: 330px;
-  height: 40px;
-  background: #003BE5;
-  border: 1px solid #003BE5;
+  background: #003be5;
+  border: 1px solid #003be5;
   border-radius: 5px;
-  font-family: 'Epilogue';
+  color: white;
+  font-family: monospace;
+  font-size: 14px;
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
+  height: 40px;
   line-height: 14px;
-  text-align: center;
-  color: #FFFFFF;
   margin-top: 5px;
+  text-align: center;
+  width: 330px;
 }
 
 .logo {

@@ -1,32 +1,30 @@
 .container {
-  display: flex;  
-  align-itens: stretch;
+  display: flex;
 }
 
 .header_container {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 1037px;
-  height: 200px;
   background-color: white;
-  color: #003BE5;
+  color: #003be5;
+  display: flex;
+  height: 200px;
+  justify-content: space-between;
   margin: auto;
-  padding: 100px
+  padding: 100px;
+  width: 1037px;
 }
 
 .logo {
-  width: 250.19px;
   height: 52.29px;
+  width: 250.19px;
 }
 
-.coins_and_total,
-.icone_email {
+.coins_and_total , .icone_email {
   display: flex;
 }
 
 .coins_and_total img {
-  margin-right: 5px
+  margin-right: 5px;
 }
 
 .icone_email {
@@ -34,5 +32,5 @@
 }
 
 .icone_email img {
-  margin-right: 5px
+  margin-right: 5px;
 }

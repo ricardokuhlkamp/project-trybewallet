@@ -1,41 +1,30 @@
 .container_table {
-  background-color: rgba(0, 59, 229, 1);
-  width: 1155px;
-  height: 464px;
-  box-shadow: -4px 9px 13px rgba(3, 107, 82, 0.3);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  background-color: rgba(0, 59, 229, 1);
+  border-radius: 10px;
+  box-shadow: -4px 9px 13px rgba(3, 107, 82, 0.3);
+  display: flex;
   height: 100%;
+  justify-content: center;
+  width: 1155px;
 }
 
-/* table , td {
-  border: 1px solid #333;
-} */
 thead , tbody {
   background-color: rgba(0, 59, 229, 1);
 }
 
 th {
-  width: 116px;
-  height: 23px;
-  border-left: 1px solid #FFFFFF;
-
-  font-family: 'Epilogue';
+  border-bottom: 1px solid white;
+  border-collapse: none;
+  border-left: 1px solid white;
+  color: white;
+  font-family: Epilogue, sans-serif;
+  font-size: 12px;
   font-style: normal;
   font-weight: 700;
-  font-size: 12px;
+  height: 23px;
   line-height: 13px;
-
-  /* or 108% */
-  /* display: flex;
-  align-items: center;
-  text-align: center; */
-
-  color: #FFFFFF;
-  border-bottom: 1px solid #FFFFFF;
-  border-collapse: none;
+  width: 116px;
 }
 
 .cell_description {
@@ -43,21 +32,20 @@ th {
 }
 
 td {
-  width: 115.56px;
-  height: 40.92px;
-  font-family: 'Epilogue';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 13px;
-  color: #2FC18C;
   border-left: 0;
   border-right: 0;
-  border-top: 1px solid rgba(47, 193, 140, 1);
-  /* border-bottom: 1px solid rgba(47, 193, 140, 1); */
-  padding: 0;
   border-spacing: 0;
-  
+  border-top: 1px solid rgba(47, 193, 140, 1);
+  color: #2fc18c;
+  font-family: Epilogue, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  height: 40.92px;
+  line-height: 13px;
+  padding: 0;
+  width: 115.56px;
+
 }
 
 tbody tr:hover {
@@ -65,15 +53,13 @@ tbody tr:hover {
 }
 
 table {
-  margin-top:30px;
   border-collapse: collapse;
-  text-align: center;
   margin: 0 auto;
   margin-top: 25px;
+  text-align: center;
 }
 
-.button_edit ,
-.button_delete {
+.button_edit , .button_delete {
   background: none;
   border: none;
 }

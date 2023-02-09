@@ -1,4 +1,4 @@
-*{
+* {
   box-sizing: border-box;
   font-family: Noto Sans Warang Citi, sans-serif;
   margin: 0;
@@ -6,12 +6,12 @@
 }
 
 body {
+  background-color: rgb(47, 193, 140);
   background-image: url('./imgs/foto fundo.svg');
   background-size: cover;
   color: white;
   display: flex;
   justify-content: center;
-  background-color:#2FC18C;
 }
 
 /* .App {
