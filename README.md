@@ -1,13 +1,33 @@
-# :construction: README customizado em construção ! :construction:
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto no qual você pode customizar e reutilizar todas as vezes que for executar o trybe-publisher.
+#  Projeto desenvolvido durante o curso de desenvolvimento web Full Stack na [Trybe](https://www.betrybe.com/)
+---
 
-Para deixá-lo com a sua cara, basta alterar o seguinte arquivo da sua máquina: ~/.student-repo-publisher/custom/_NEW_README.md
+## 📝 Proposta:
+Neste projeto desenvolveu-se uma carteira de controle de gastos com conversor de moedas.
 
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+---
+
+## 💡 Habilidades desenvolvidas:
+
+- Criação de um store Redux na aplicação React;
+
+- Criar de reducers no Redux na aplicação React;
+
+- Criação de actions no Redux na aplicação React;
+
+- Criação de dispatchers no Redux na aplicações React;
+
+- Conecção do Redux aos componentes React;
+
+- Criação de actions assíncronas na aplicação React que faz uso de Redux.
+
+---
+
+## ⚙️ API utilizada:
+A aplicação faz uso da awesomeapi API de Cotações para realizar a busca de câmbio de moedas.
+- https://economia.awesomeapi.com.br/json/all
+
+---
+
+🔗 [Linkedin ricardo-kühlkamp-dev](linkedin.com/in/ricardo-kühlkamp-dev)
+
+---
