@@ -6,11 +6,6 @@ import { renderWithRouterAndRedux } from './helpers/renderWith';
 import Wallet from '../pages/Wallet';
 import mockData from './helpers/mockData';
 
-// const emailTeste = 'tryber@trybe.com';
-// const creditCardText = 'Cartão de crédito';
-// const editBtnTestId = 'edit-btn';
-// const deleteBtnTestId = 'delete-btn';
-
 describe('', () => {
   test('Verificando a adição de despesa na Tabela', async () => {
     const currenciesList = [
