@@ -1,4 +1,11 @@
 #  Projeto desenvolvido durante o curso de desenvolvimento web Full Stack na [Trybe](https://www.betrybe.com/)
+
+<div style="display:flex" >
+  <img src="./src/imgs/macBook.png" alt="macBook" style="width: 500px" />
+
+  <img src="./src/imgs/mobile.png" alt="macBook" style="width: 150px" />
+</div>
+
 ---
 
 ## 📝 Proposta:
