@@ -1,19 +1,27 @@
 .container_table {
-  align-items: center;
-  background-color: rgba(0, 59, 229, 1);
-  border-radius: 10px;
-  box-shadow: -4px 9px 13px rgba(3, 107, 82, 0.3);
-  display: flex;
+  width: 100%;
   height: 100%;
-  justify-content: center;
-  width: 1155px;
-}
-
-thead , tbody {
+  overflow: auto;
+  flex-wrap: wrap;
   background-color: rgba(0, 59, 229, 1);
+  box-shadow: -4px 9px 13px rgba(3, 107, 82, 0.3);
+  border-radius: 10px;
 }
 
+table {
+  width: 100%;
+  /* table-layout: fixed; */
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+tbody tr:hover {
+  background-color: rgba(3, 107, 82, 0.3);
+}
+
+thead,
 th {
+  /* position: sticky; */
   border-bottom: 1px solid white;
   border-collapse: none;
   border-left: 1px solid white;
@@ -45,7 +53,6 @@ td {
   line-height: 13px;
   padding: 0;
   width: 115.56px;
-
 }
 
 tbody tr:hover {

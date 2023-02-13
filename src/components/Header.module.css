@@ -8,19 +8,22 @@
   color: #003be5;
   display: flex;
   height: 200px;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin: auto;
-  padding: 100px;
-  width: 1037px;
+  padding: 10px;
+  max-width: 1037px;
 }
 
 .logo {
   height: 52.29px;
   width: 250.19px;
+  padding: 5px;
 }
 
 .coins_and_total , .icone_email {
   display: flex;
+  padding: 5px;
 }
 
 .coins_and_total img {
@@ -33,4 +36,36 @@
 
 .icone_email img {
   margin-right: 5px;
+}
+
+@media (max-width: 720px) {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    display: flex;
+    margin-bottom: 40px;
+  }
+
+  .header_container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    margin: auto;
+    padding: 5px;
+    width: 100%;
+  }
+
+  .logo {
+    height: 42.29px;
+    width: 200.19px;
+    margin-bottom: 1px;
+  }
+  
+  .coins_and_total , .icone_email {
+    display: flex;
+    margin-bottom: 1px;
+  }
 }

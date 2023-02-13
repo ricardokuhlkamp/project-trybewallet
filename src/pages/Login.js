@@ -58,7 +58,7 @@ class Login extends React.Component {
               className={ styles.input_password }
               placeholder="insira sua senha"
               data-testid="password-input"
-              type="senha"
+              type="password"
               id="senha"
               value={ senha }
               name="senha"
