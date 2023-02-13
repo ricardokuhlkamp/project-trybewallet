@@ -6,6 +6,7 @@
   <img src="./src/imgs/mobile.png" alt="macBook" style="width: 150px" />
 </div>
 
+acesso ao [trybe-wallet](https://trybe-wallet-rk.netlify.app).
 ---
 
 ## 📝 Proposta:
